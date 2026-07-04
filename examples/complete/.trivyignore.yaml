@@ -1,0 +1,5 @@
+# No trivy findings need waiving for this module. This file exists only because the CI
+# references it via TRIVY_IGNOREFILE; a missing ignore file makes trivy fatally error. Add a
+# misconfigurations entry (with an id and a statement) here only when a real, justified finding
+# needs suppressing.
+misconfigurations: []
