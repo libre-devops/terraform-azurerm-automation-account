@@ -56,7 +56,7 @@ module "automation_account" {
   # The shared Libre DevOps PowerShell helper layer, imported so 7.x runbooks can Import-Module it.
   powershell72_modules = {
     "LibreDevOpsHelpers" = {
-      uri = "https://www.powershellgallery.com/api/v2/package/LibreDevOpsHelpers/2.1.0"
+      uri = "https://www.powershellgallery.com/api/v2/package/LibreDevOpsHelpers/2.3.1"
     }
   }
 
