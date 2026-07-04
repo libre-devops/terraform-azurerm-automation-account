@@ -45,8 +45,18 @@ module "automation_account" {
     "hello-world" = {
       runbook_type             = "PowerShell72"
       runtime_environment_name = "pwsh-74"
-      description              = "A trivial runbook that writes a greeting."
-      content                  = "Write-Output 'Hello from Azure Automation'"
+      description              = "A trivial runbook that logs a greeting via the Libre DevOps helpers."
+      content                  = <<-PS
+        Import-Module LibreDevOpsHelpers
+        Write-LdoLog -Level INFO -Message 'Hello from Azure Automation'
+      PS
+    }
+  }
+
+  # The shared Libre DevOps PowerShell helper layer, imported so 7.x runbooks can Import-Module it.
+  powershell72_modules = {
+    "LibreDevOpsHelpers" = {
+      uri = "https://www.powershellgallery.com/api/v2/package/LibreDevOpsHelpers/2.1.0"
     }
   }
 

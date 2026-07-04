@@ -71,6 +71,19 @@ variable "name" {
   type        = string
 }
 
+variable "powershell72_modules" {
+  description = "PowerShell 7.2 modules keyed by name, imported from a package URI (e.g. a PowerShell Gallery nupkg). Use this for modern 7.x runbooks and runtime environments (e.g. LibreDevOpsHelpers)."
+  type = map(object({
+    uri = string
+    hash = optional(object({
+      algorithm = string
+      value     = string
+    }))
+    tags = optional(map(string))
+  }))
+  default = {}
+}
+
 variable "public_network_access_enabled" {
   description = "Whether the account is reachable over the public internet."
   type        = bool

@@ -155,6 +155,27 @@ resource "azurerm_automation_module" "this" {
   }
 }
 
+resource "azurerm_automation_powershell72_module" "this" {
+  for_each = var.powershell72_modules
+
+  automation_account_id = azurerm_automation_account.this.id
+  tags                  = merge(var.tags, coalesce(each.value.tags, {}))
+  name                  = each.key
+
+  module_link {
+    uri = each.value.uri
+
+    dynamic "hash" {
+      for_each = each.value.hash != null ? [each.value.hash] : []
+
+      content {
+        algorithm = hash.value.algorithm
+        value     = hash.value.value
+      }
+    }
+  }
+}
+
 resource "azurerm_automation_variable_string" "this" {
   for_each = { for k, v in var.variables : k => v if v.type == "string" }
 
