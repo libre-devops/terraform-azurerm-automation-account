@@ -100,7 +100,9 @@ variable "runbooks" {
     Runbooks keyed by name. runbook_type is one of PowerShell, PowerShell72, Python2, Python3,
     GraphPowerShell, GraphPowerShellWorkflow, or Script. Provide the body inline with `content`
     or from a URI with `publish_content_link`. Attach a runtime_environment_name for the modern
-    runtime model. Logging defaults off (log_progress/log_verbose).
+    runtime model: with a runtime environment the runbook_type must be the base type (PowerShell,
+    Python, Script), never a version-pinned type like PowerShell72/Python2/Python3, because the
+    runtime environment supplies the version. Logging defaults off (log_progress/log_verbose).
   DESC
   type = map(object({
     runbook_type             = string
@@ -125,6 +127,14 @@ variable "runbooks" {
   validation {
     condition     = alltrue([for r in values(var.runbooks) : r.content != null || r.publish_content_link != null])
     error_message = "Each runbook needs its body: set content (inline) or publish_content_link (from a URI)."
+  }
+
+  validation {
+    condition = alltrue([
+      for r in values(var.runbooks) :
+      r.runtime_environment_name == null || !contains(["PowerShell72", "Python2", "Python3"], r.runbook_type)
+    ])
+    error_message = "A runbook bound to a runtime_environment_name must use a base runbook_type (PowerShell, Python, Script), not a version-pinned type (PowerShell72/Python2/Python3); the runtime environment supplies the version."
   }
 }
 

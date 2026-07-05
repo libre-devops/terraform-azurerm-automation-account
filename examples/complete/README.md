@@ -67,7 +67,10 @@ module "automation_account" {
 
   runbooks = {
     "hello-world" = {
-      runbook_type             = "PowerShell72"
+      # Bound to a runtime environment, so the base type "PowerShell" is used; the runtime
+      # environment (pwsh-74) supplies the 7.4 version. The version-pinned PowerShell72 type is
+      # the legacy model and is mutually exclusive with runtime environments.
+      runbook_type             = "PowerShell"
       runtime_environment_name = "pwsh-74"
       description              = "A trivial runbook that logs a greeting via the Libre DevOps helpers."
       content                  = <<-PS

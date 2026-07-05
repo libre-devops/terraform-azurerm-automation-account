@@ -42,7 +42,7 @@ run "full_surface" {
 
     runbooks = {
       "sync-groups" = {
-        runbook_type             = "PowerShell72"
+        runbook_type             = "PowerShell"
         content                  = "Write-Output 'hello'"
         runtime_environment_name = "pwsh-74"
       }
