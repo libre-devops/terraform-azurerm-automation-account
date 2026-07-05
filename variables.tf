@@ -132,7 +132,8 @@ variable "runtime_environments" {
   description = <<-DESC
     Runtime environments keyed by name (the modern replacement for global modules: a per-runbook
     language and version, e.g. PowerShell 7.2 or Python 3.10). runtime_language and runtime_version
-    are required; runtime_default_packages pins base package versions.
+    are required; runtime_default_packages pins base package versions. Azure caps per-resource tags
+    at 3, so tags here are not merged with the account tags (supply at most 3).
   DESC
   type = map(object({
     runtime_language         = string

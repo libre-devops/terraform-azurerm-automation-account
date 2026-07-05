@@ -35,9 +35,11 @@ resource "azurerm_automation_account" "this" {
 resource "azurerm_automation_runtime_environment" "this" {
   for_each = var.runtime_environments
 
-  automation_account_id    = azurerm_automation_account.this.id
-  location                 = var.location
-  tags                     = merge(var.tags, coalesce(each.value.tags, {}))
+  automation_account_id = azurerm_automation_account.this.id
+  location              = var.location
+  # Azure caps runtime environment tags at 3, so the full inherited tag set is not merged here
+  # (the account carries it). Only caller-supplied per-resource tags are applied.
+  tags                     = each.value.tags
   name                     = each.key
   runtime_language         = each.value.runtime_language
   runtime_version          = each.value.runtime_version
@@ -51,7 +53,8 @@ resource "azurerm_automation_runbook" "this" {
   resource_group_name     = local.rg.resource_group_name
   automation_account_name = azurerm_automation_account.this.name
   location                = var.location
-  tags                    = merge(var.tags, coalesce(each.value.tags, {}))
+  # Automation child resources cap tags at 3; only caller-supplied per-resource tags are applied.
+  tags = each.value.tags
 
   name                     = each.key
   runbook_type             = each.value.runbook_type
@@ -159,8 +162,9 @@ resource "azurerm_automation_powershell72_module" "this" {
   for_each = var.powershell72_modules
 
   automation_account_id = azurerm_automation_account.this.id
-  tags                  = merge(var.tags, coalesce(each.value.tags, {}))
-  name                  = each.key
+  # Automation child resources cap tags at 3; only caller-supplied per-resource tags are applied.
+  tags = each.value.tags
+  name = each.key
 
   module_link {
     uri = each.value.uri
